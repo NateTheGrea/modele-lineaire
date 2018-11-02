@@ -123,8 +123,8 @@ Voici les variables disponibles afin d'effectuer un modèle prédictif de la per
 \end{table}
 
 \newpage
-Ces variables sont en majorité qualitative. Une analyse de fréquences de celles-ci permet d'avoir un meilleur ressenti quant à leurs interaction avec la variable exogène \textsc{Loss}:\\
-<<echo = FALSE>>=
+La majorité de ces variables sont qualitatives. Une analyse de fréquences de celles-ci permet d'avoir un meilleur ressenti quant à leurs interactions avec la variable exogène \textsc{Loss}:\\
+<<echo = FALSE,fig.cap = "Barplot des fréquences des variables qualitatives",fig.pos="ht">>=
 grid.arrange(p1,p2,p3,p4,p5, nrow = 3)
 @
 
@@ -142,7 +142,7 @@ $\max(X)$     & 95 & 1067.697
 \end{tabular}
 \end{table}
 
-<<echo = FALSE,fig.cap="\\label{endogene}Variable LOSS en fonction de chaque variables explicatives",fig.pos = "htb">>=
+<<echo = FALSE,fig.cap="\\label{endogene}Variable LOSS en fonction de chaque variable explicative",fig.pos = "!ht">>=
 p6 <- ggplot(data=data,aes(x=ATTORNEY,y= LOSS)) + geom_point()
 p7 <- ggplot(data=data,aes(x=CLMSEX,y= LOSS)) + geom_point()
 p8 <- ggplot(data=data,aes(x=MARITAL,y= LOSS)) + geom_point()
@@ -152,12 +152,13 @@ p11 <- ggplot(data=data,aes(x=CLMAGE,y= LOSS)) + geom_point()
 grid.arrange(p6,p7,p8,p9,p10,p11, nrow = 3)
 @
 
+
 \section{Modèle proposé}
 \label{sec:modele}
 
 \subsection{Équation}
 \label{ssec:equation}
-Le modèle choisit est donné par l'équation suivante
+Le modèle choisi est donné par l'équation suivante
 $$
 \begin{aligned}
 \ln Y  = & \beta_0 + \beta_1x_{i,CLMAGE} + \beta_2x_{i,ATTORNEY} + \beta_{3,1}x_{i,MARITAL,2} + \\ 
@@ -169,22 +170,21 @@ $$
 \subsection{Traitement des variables qualitatives}
 \label{ssec:var_qual}
 Les variables qualitatives du modèle, soit \textit{ATTORNEY, SEATBELT et MARITAL} , ont chacune
-été converti en \textit{factor} car c'est le type de données usuelle de R afin d'effectuer des
-régression linéaire comportant des variables qualitatives.
+été converties en \textit{factor} car c'est le type de données qui est compatible avec R lorsqu'on veut utiliser ce logiciel pour effectuer des régressions linéaires comportant des variables qualitatives.
 \subsection{Interactions}
 \label{ssec:interaction}
-Suite à la selection des variables, il nous a été possible de déterminer qu'il n'y avait qu'une seule
+Suite à la sélection des variables, il nous a été possible de déterminer qu'il n'y avait qu'une seule
 interaction non-redondante (qui ne cause pas de multicolinéarité) et significative au modèle. Il
-s'agit de l'interaction entre les variables \textit{CLMAGE et ATTORNEY} qui représentent respectivement l'âge du réclamant ou de la réclamante et la présence d'un avocat pour la réclamation. Cette interaction est logique car en effet, l'âge d'un réclamant peut influencer la décision de prendre un avocat. 
+s'agit de l'interaction entre les variables \textit{CLMAGE et ATTORNEY} qui représentent respectivement l'âge du réclamant ou de la réclamante et la présence d'un avocat pour la réclamation. Cette interaction est logique car, en effet, l'âge d'un réclamant peut influencer la décision de prendre un avocat. 
 \subsection{Interprétation}
 \label{ssec:interpretation}
 
 \subsection{Statistiques}
 \label{ssec:stats}
-Voici les intervalles de confiances à 95\% pour chacun des paramètres du modèle:
+Voici les intervalles de confiance à 95\% pour chacun des paramètres du modèle:
 \begin{table}[htb]
 \centering
-\caption{Intervalles de confiances des paramètres du modèle}
+\caption{Intervalles de confiance des paramètres du modèle}
 \begin{tabular}{l|l|l}
      & 2.5\% & 97.5\% \\ \hline
 $\beta_0$ &  0.28583388 & 1.262939359       \\
@@ -198,10 +198,10 @@ $\beta_5$     &  -0.02025211 & -0.003201663
 \end{tabular}
 \end{table}
 
-De plus, voici le $R^2_a$ : $0.2754$. Ainsi, une grande variabilité de la variable endogène n'est pas expliqué par le modèle. Ceci est en parti dû au grand nombre de variables qualitives dans le modèle qui n'ont pas assez de valeurs possibles afin de réfléter l'étendue des valeurs possible de la perte économique. \\
-
+De plus, voici le $R^2_a$ : $0.2754$. Ainsi, une grande variabilité de la variable endogène n'est pas expliquée par le modèle. Ceci est en parti dû au grand nombre de variables qualitatives dans le modèle qui n'ont pas assez de valeurs possibles afin de réfléter l'étendue des valeurs possible de la perte économique. (structure de la phrase à revoir) \\
+\newpage
 Voici la table anova du modèle:\\
-\begin{table}[htb]
+\begin{table}[!htb]
 \centering
 \caption{Table anova du modèle}
 \begin{tabular}{l|cccc}
@@ -218,13 +218,13 @@ SST & 1335 & 2899.348   & 2.171796 &
 \label{sec:analyse}
 \subsection{Linéarité}
 
-<<echo = FALSE, fig.cap="\\label{fig:rstudent}Résidus studentisé en fonction de CLMAGE",fig.pos='htb'>>=
+<<echo = FALSE, fig.cap="\\label{fig:rstudent}Résidus studentisés en fonction de CLMAGE",fig.pos='!htb'>>=
 plot(data$CLMAGE,rstudent(modele),xlab="CLMAGE", ylab="Résidus studentisés")
 @
 
 \newpage
 \subsection{Homogénéité}
-<<echo = FALSE,fig.cap="\\label{fig:homo}Résidus studentisé en fonction de Y",fig.pos='htb'>>=
+<<echo = FALSE,fig.cap="\\label{fig:homo}Résidus studentisés en fonction de Y",fig.pos='htb'>>=
 plot(modele$fitted.values,rstudent(modele),xlab="Valeurs prédites",
      ylab="Résidus studentisés")
 @
@@ -241,21 +241,21 @@ qqnorm(rstudent(modele))
 qqline(as.numeric(rstudent(modele)))
 @
 \subsection{Test pour manque d'ajustement}
-Après avoir effectuer un test pour manque d'ajustement, on obtient une p-value de $8.623*10^{-5}$, valeur inférieure au seuil de 5\%. Ainsi, on doit rejeter $H_0$, ce qui implique que le modèle actuel ne s'ajuste pas bien aux données.
+Après avoir effectué un test pour manque d'ajustement, on obtient une p-value de $8.623*10^{-5}$, valeur inférieure au seuil de 5\%. Ainsi, on doit rejeter $H_0$, ce qui implique que le modèle actuel ne s'ajuste pas bien aux données (sens de la phrase à clarifier).
 \newpage
 \section{Prévisions}
 \label{sec:prev}
 Pour répondre à la question du directeur, un individu répondant aux caractéristiques suivantes: 
-CLMAGE=45, SEATBELT=1, ATTORNEY=1, MARITAL="single" et  CLMINSUR = 1, aura selon le modèle actuel une perte économique de : $Y \in [0.3378229, 46.89545]$  à un niveau de 95\%.
+CLMAGE=45, SEATBELT=1, ATTORNEY=1, MARITAL="single" et  CLMINSUR = 1, aura selon le modèle actuel une perte économique de : $Y \in [0.3378229, 46.89545]$ à un niveau de 95\%.
 \\
 \\
-Avec les même caractéristiques, on obtient : $E[Y] \in [3.369781, 4.701301]$. Ainsi, on constate la grande variabilité de la perte économique en comparant les différentes bornes des deux prévisions.
+Avec les mêmes caractéristiques, on obtient : $E[Y] \in [3.369781, 4.701301]$. Ainsi, on constate la grande variabilité de la perte économique en comparant les différentes bornes des deux prévisions.
 
 \begin{table}[htb]
 \centering
 \addtolength{\leftskip} {-2cm}
 \addtolength{\rightskip}{-2cm}
-\caption{Intervalles de confiances des moyennes de la perte économique totale prévues}
+\caption{Intervalles de confiance des moyennes de la perte économique totale prévues}
 \begin{tabular}{cccccc|cc}
 CLMAGE & MARITAL & CLMSEX & SEATBELT & CLMINSUR & ATTORNEY & 2.5\% & 97.5\% \\ \hline
 70 & single & M & 1 & 1 & 1 & 4.83 & 8.86     \\
@@ -273,27 +273,27 @@ CLMAGE & MARITAL & CLMSEX & SEATBELT & CLMINSUR & ATTORNEY & 2.5\% & 97.5\% \\ \
 
 
 
-\section{Recommendations}
+\section{Recommandations}
 
 
 \begin{appendices}
 \section{Erreurs de données}
 \label{annex:error}
-La base de données originelles utilisé dans la création du modèle a dû subir quelques modifications afin d'être utilisable. Voici les quelques erreurs répertoriés ainsi que les techniques utilisés pour les rectifier:
+La base de données originelles utilisées dans la création du modèle a dû subir quelques modifications afin d'être utilisable. Voici les quelques erreurs répertoriées ainsi que les techniques utilisées pour les rectifier:
 \begin{enumerate}
-\item Fautes d'ortographe
+\item Fautes d'orthographe
 \begin{enumerate}
 \item MARITAL\\
-Cette colonne contient à l'origine plusieurs faute de frappes des états maritaux. Afin d'unifier le tout, il a fallut substituer les états dans ces quatres variables distinctes : \textit{divorced, widowed, married, single}.
+Cette colonne contient à l'origine plusieurs fautes de frappe dans la manière de noter les états maritaux. Afin d'uniformiser le tout, il a fallu substituer les états écrits différemment dans ces quatre variables distinctes : \textit{divorced, widowed, married, single}.
 \newpage
 \item CLMSEX\\
-Cette colonne supposé contenir les états \textbf{F} ou \textbf{M} contient à l'origine quelques états \textit{male}. Afin d'unifier le tout, ces états ont été substituer en \textbf{M}.
+Cette colonne supposée contenir les états \textbf{F} ou \textbf{M} contient à l'origine quelques états \textit{male}. Afin d'unifier le tout, ces états répertoriés de façon hétérogène ont été substitués en \textbf{M}.
 \end{enumerate}
 \item Données aberrantes
 \begin{enumerate}
 \item LOSS\\
 % À débattre.
-Cette colonne contient une valeur très extrême de \textit{1067.697}. En analysant la figure \ref{fig:boxplot}, on voit bien que la valeur est très énorme à comparer au reste. Néanmoins, comme il s'agit de perte économique aux États-Unis suite à une blessure corporelle, cette valeur est possible donc nous ne l'avons pas retiré de l'étude.\\
+Cette colonne contient une valeur très extrême de \textit{1067.697}. En analysant la figure \ref{fig:boxplot}, on voit bien que la valeur est très énorme comparativement à l'ensemble des autres valeurs prises par cette variable. Néanmoins, comme il s'agit de perte économique aux États-Unis suite à une blessure corporelle, cette valeur est possible donc nous ne l'avons pas retirée de l'étude.\\
 
 <<echo = FALSE,fig.cap="\\label{fig:boxplot}Boxplot de LOSS",fig.pos = "htb">>=
 ggplot(data, aes(y = LOSS)) +
@@ -302,7 +302,7 @@ ggplot(data, aes(y = LOSS)) +
 @
 \newpage
 \item CLMAGE\\
-Cette colonne contient une valeur de \textit{610}, valeur impossible selon la description de la variable, soit l'âge du réclamant. Afin de ne pas fausser les résultat, cette valeur a été modifié pour 61.
+Cette colonne contient une valeur de \textit{610}, valeur impossible selon la description de la variable, soit l'âge du réclamant. Afin de ne pas fausser les résultats, cette valeur a été modifiée pour 61.
 \end{enumerate}
 \end{enumerate}
 
@@ -310,7 +310,6 @@ Cette colonne contient une valeur de \textit{610}, valeur impossible selon la de
 \section{Transformation}
 \label{annex:transfo}
 <<echo = FALSE>>=
-
 bcox <- lm(LOSS ~ CLMAGE,data = data) # On a omis les variables qualitatives pour en faire un modèle simple
 # avec les variables qualitatives incluts dans B0
 boxcox(bcox)
