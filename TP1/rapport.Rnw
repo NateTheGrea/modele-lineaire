@@ -127,21 +127,8 @@ La majorité de ces variables sont qualitatives. Une analyse de fréquences de c
 <<echo = FALSE,fig.cap = "Barplot des fréquences des variables qualitatives",fig.pos="ht">>=
 grid.arrange(p1,p2,p3,p4,p5, nrow = 3)
 @
-
-\begin{table}[htb]
-\centering
-\caption{Analyse des variables continues}
-\begin{tabular}{l|c|c}
-     & CLMAGE & LOSS \\ \hline
-$\min(X)$ &  0.0 & 0.005      \\
-$F_X^{-1}(0.25)$     & 21 & 0.640       \\
-$F_X^{-1}(0.5)$     & 33 & 2.331        \\
-$E[X]$     & 32.6 & 5.965        \\
-$F_X^{-1}(0.75)$     & 41 &  3.998        \\
-$\max(X)$     & 95 & 1067.697 
-\end{tabular}
-\end{table}
-
+\newpage
+Afin de mieux représenter l'interactions entre chaque varaibles exogènes et la variable endogène, la figure \ref{endogene} a été créée. Celle-ci représente la variable endogène en fonction de chacune des variable exogènes à considérer, c'est pourquoi \textsc{Casenum} n'y apparaît pas.
 <<echo = FALSE,fig.cap="\\label{endogene}Variable LOSS en fonction de chaque variable explicative",fig.pos = "!ht">>=
 p6 <- ggplot(data=data,aes(x=ATTORNEY,y= LOSS)) + geom_point()
 p7 <- ggplot(data=data,aes(x=CLMSEX,y= LOSS)) + geom_point()
@@ -151,6 +138,25 @@ p10 <- ggplot(data=data,aes(x=SEATBELT,y= LOSS)) + geom_point()
 p11 <- ggplot(data=data,aes(x=CLMAGE,y= LOSS)) + geom_point()
 grid.arrange(p6,p7,p8,p9,p10,p11, nrow = 3)
 @
+\newpage
+De plus, le tableau \ref{tableau:continue} indique des quantités intéressantes pour les variables continues, telles que la moyenne, écart-type, médiane, minimum et maximum.
+\begin{table}[!ht]
+\centering
+\caption{Analyse des variables continues}
+\begin{tabular}{l|c|c}
+     & CLMAGE & LOSS \\ \hline
+$\min(X)$ &  0.0 & 0.005      \\
+$F_X^{-1}(0.25)$     & 21 & 0.640       \\
+$F_X^{-1}(0.5)$     & 33 & 2.331        \\
+$E[X]$     & 32.6 & 5.965        \\
+$F_X^{-1}(0.75)$     & 41 &  3.998        \\
+$\max(X)$     & 95 & 1067.697 \\
+$\sigma$ & 15.86119 & 33.1851 
+\end{tabular}
+\label{tableau:continue}
+\end{table}
+
+
 
 
 \section{Modèle proposé}
@@ -178,6 +184,8 @@ interaction non-redondante (qui ne cause pas de multicolinéarité) et significa
 s'agit de l'interaction entre les variables \textit{CLMAGE et ATTORNEY} qui représentent respectivement l'âge du réclamant ou de la réclamante et la présence d'un avocat pour la réclamation. Cette interaction est logique car, en effet, l'âge d'un réclamant peut influencer la décision de prendre un avocat. 
 \subsection{Interprétation}
 \label{ssec:interpretation}
+
+
 
 \subsection{Statistiques}
 \label{ssec:stats}
