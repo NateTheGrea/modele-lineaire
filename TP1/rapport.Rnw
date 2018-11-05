@@ -325,15 +325,26 @@ Cette colonne contient une valeur de \textit{610}, valeur impossible selon la de
 \newpage
 \section{Transformation}
 \label{annex:transfo}
-Dans la section \ref{sec:analyse}, il a été discuté qu'une transformation des variables continues serait à trouver. Pour ce faire, la méthode box-cox a d'abord été effectuer 
-%<<echo = FALSE>>=
-%bcox <- lm(LOSS ~ CLMAGE,data = data) # On a omis les variables qualitatives pour en faire un modèle simple
+Dans la section \ref{sec:analyse}, il a été discuté qu'une transformation des variables continues serait possible. En effet, en analysant les résidus studentisé de la variable endogène en fonction de la variable exogène continue, on constate que le postulat d'homogénéité n'est pas validé. Ainsi, afin de trouver une transformation approprié, la méthode box-cox a été appliqué sur la variable endogène. 
+%<<echo = FALSE,fig.height = 3,fig.width = 3,fig.align = "center">>=
+%bcox <- lm(LOSS ~ CLMAGE,data = data) # On a omis les variables qualitatives %our en faire un modèle simple
 %# avec les variables qualitatives incluts dans B0
 %boxcox(bcox)
 %@
 
+<<echo = FALSE,fig.height = 3>>=
 
-<<echo = FALSE,message=FALSE,fig.height= 3>>=
+m1 <- lm(LOSS ~ CLMAGE ,data=data)
+m2 <- lm(log(LOSS) ~ CLMAGE ,data=data)
+d1 <- data.frame("CLMAGE" = data$CLMAGE,"Residus" = rstudent(m1))
+d2 <- data.frame("CLMAGE" = data$CLMAGE,"Residus" = rstudent(m2))
+p1 <- ggplot(data=d1,aes(x=CLMAGE,y= Residus)) + geom_point() + ggtitle("Avant transformation") + theme(plot.title = element_text(hjust = 0.5))
+p2 <- ggplot(data=d2,aes(x=CLMAGE,y= Residus)) + geom_point() + ggtitle("Après transformation") + theme(plot.title = element_text(hjust = 0.5))
+grid.arrange(p1,p2, nrow = 1)
+@
+
+
+<<echo = FALSE,message=FALSE,fig.cap = "Comparaison des distributions post-transformation",fig.height= 3,fig.pos = "!ht">>=
 #par(mfrow=c(2,2))
 p1 <- ggplot(data, aes(x=LOSS)) + ylab("Fréquence") + geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
 p2 <- ggplot(data, aes(x=log(LOSS))) + ylab("Fréquence") + geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
