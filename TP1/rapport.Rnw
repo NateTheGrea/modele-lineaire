@@ -121,12 +121,7 @@ Voici les variables disponibles afin d'effectuer un modèle prédictif de la per
 \textsc{Loss}                & Valeur continue      & Perte économique totale du réclamant  en milliers de dollars \\ \hline
 \end{tabular}
 \end{table}
-
-\newpage
-La majorité de ces variables sont qualitatives. Une analyse de fréquences de celles-ci permet d'avoir un meilleur ressenti quant à leurs interactions avec la variable exogène \textsc{Loss}:\\
-<<echo = FALSE>>=
-grid.arrange(p1,p2,p3,p4,p5, nrow = 3)
-@
+En effectuant l'analyse préliminaire univariée des différentes variables de la base de données, il est déjà possible d'avoir une bonne idée de leur pertinence et de leur pouvoir prédictif potentiel. La variable CASENUM n'est pas utilisée dans le modèle final puisqu'elle n'a pas d'incidence directe sur la variable du montant des pertes. La variable LOSS est la variable endogène continue, et la seule autre variable continue employée dans le modèle est la variable exogène CLMAGE.
 
 \begin{table}[htb]
 \centering
@@ -141,6 +136,17 @@ $F_X^{-1}(0.75)$     & 41 &  3.998        \\
 $\max(X)$     & 95 & 1067.697 
 \end{tabular}
 \end{table}
+
+On s'intéresse donc à la capacité de la variable CLMAGE à prédire la valeur de la variable LOSS, tout en gardant en tête que cette variable endogène prend quelques valeurs extrêmes, dont la sévérité n'est pas nécessairement expliquée par les valeurs entières de la variable CLMAGE. L'analyse préléminaire univariée des variables continues projette donc la possibilité que le modèle ne puisse pas expliquer parfaitement la valeur du montant relié à une réclamation donnée.
+
+\newpage 
+Les autres variables de la base de données sont des variables qualitatives dichotomiques ou polytomiques. Une analyse de fréquences de celles-ci permet d'avoir un meilleur ressenti quant à leurs interactions avec la variable exogène \textsc{Loss}:\\
+<<echo = FALSE>>=
+grid.arrange(p1,p2,p3,p4,p5, nrow = 3)
+@
+
+
+
 
 <<echo = FALSE,fig.cap="\\label{endogene}Variable LOSS en fonction de chaque variable explicative",fig.pos = "htb">>=
 p6 <- ggplot(data=data,aes(x=ATTORNEY,y= LOSS)) + geom_point()
