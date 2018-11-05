@@ -233,7 +233,7 @@ SST & 1335 & 2899.348   & 2.171796 &
 \\Selon la statistique F du tableau \ref{table:anova}, on peut effectuer un test de validité globale de la régression linéaire. Ce faisant, nous obtenons une p-value inférieur à $2.2*10^{-16}$ et donc nous concluons que la régression est tout à fait valide. 
 \newpage
 \section{Analyse des résidus}
-\label{sec:analyse}
+\label{sec:residus}
 \subsection{Linéarité}
 
 <<echo = FALSE, fig.cap="\\label{fig:rstudent}Résidus studentisés en fonction de CLMAGE",fig.pos='!htb'>>=
@@ -293,7 +293,7 @@ CLMAGE & MARITAL & CLMSEX & SEATBELT & CLMINSUR & ATTORNEY & 2.5\% & 97.5\% \\ \
 
 \section{Recommandations}
 
-
+\newpage
 \begin{appendices}
 \section{Erreurs de données}
 \label{annex:error}
@@ -303,7 +303,6 @@ La base de données originelles utilisées dans la création du modèle a dû su
 \begin{enumerate}
 \item MARITAL\\
 Cette colonne contient à l'origine plusieurs fautes de frappe dans la manière de noter les états maritaux. Afin d'uniformiser le tout, il a fallu substituer les états écrits différemment dans ces quatre variables distinctes : \textit{divorced, widowed, married, single}.
-\newpage
 \item CLMSEX\\
 Cette colonne supposée contenir les états \textbf{F} ou \textbf{M} contient à l'origine quelques états \textit{male}. Afin d'unifier le tout, ces états répertoriés de façon hétérogène ont été substitués en \textbf{M}.
 \end{enumerate}
@@ -313,31 +312,48 @@ Cette colonne supposée contenir les états \textbf{F} ou \textbf{M} contient à
 % À débattre.
 Cette colonne contient une valeur très extrême de \textit{1067.697}. En analysant la figure \ref{fig:boxplot}, on voit bien que la valeur est très énorme comparativement à l'ensemble des autres valeurs prises par cette variable. Néanmoins, comme il s'agit de perte économique aux États-Unis suite à une blessure corporelle, cette valeur est possible donc nous ne l'avons pas retirée de l'étude.\\
 
-<<echo = FALSE,fig.cap="\\label{fig:boxplot}Boxplot de LOSS",fig.pos = "htb">>=
+<<echo = FALSE,fig.cap="\\label{fig:boxplot}Boxplot de LOSS",fig.pos = "!htb",fig.width=3,fig.height=1.5,fig.align="center">>=
 ggplot(data, aes(y = LOSS)) +
-    geom_boxplot() + geom_point(data=data.frame(x=0,y=max(data$LOSS)), size = 3,aes(x=x,y=y),colour="red") +theme_classic()
+    geom_boxplot() + geom_point(data=data.frame(x=0,y=max(data$LOSS)), size = 2,aes(x=x,y=y),colour="red") +theme_classic()
 
 @
-\newpage
 \item CLMAGE\\
 Cette colonne contient une valeur de \textit{610}, valeur impossible selon la description de la variable, soit l'âge du réclamant. Afin de ne pas fausser les résultats, cette valeur a été modifiée pour 61.
 \end{enumerate}
 \end{enumerate}
 
-
+\newpage
 \section{Transformation}
 \label{annex:transfo}
-<<echo = FALSE>>=
-bcox <- lm(LOSS ~ CLMAGE,data = data) # On a omis les variables qualitatives pour en faire un modèle simple
-# avec les variables qualitatives incluts dans B0
-boxcox(bcox)
-@
+Dans la section \ref{sec:analyse}, il a été discuté qu'une transformation des variables continues serait à trouver. Pour ce faire, la méthode box-cox a d'abord été effectuer 
+%<<echo = FALSE>>=
+%bcox <- lm(LOSS ~ CLMAGE,data = data) # On a omis les variables qualitatives pour en faire un modèle simple
+%# avec les variables qualitatives incluts dans B0
+%boxcox(bcox)
+%@
 
 
 <<echo = FALSE>>=
-par(mfrow=c(1,2))
+par(mfrow=c(2,2))
+p1 <- ggplot(data, aes(x=LOSS)) + ylab("Fréquence") + geom_histogram()
+p2 <- ggplot(data, aes(x=log(LOSS))) + ylab("Fréquence")+ xlab("") + geom_histogram()
+p2
+grid.arrange(p6,p7,p8,p9,p10,p11, nrow = 3)
 hist(data$LOSS)
 hist(log(data$LOSS))
+
+m1 <- lm(LOSS ~ CLMAGE ,data=data)
+m2 <- lm(log(LOSS) ~ CLMAGE ,data=data)
+
+#plot(data$CLMAGE,data$LOSS)
+#plot(data$CLMAGE,log(data$LOSS))
+
+plot(m1$fitted.values,rstudent(m1))
+plot(m2$fitted.values,rstudent(m2))
+# 
+# plot(data$CLMAGE,rstudent(m1))
+# plot(data$CLMAGE,rstudent(m2))
+
 @
 
 
