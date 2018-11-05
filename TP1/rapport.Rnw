@@ -333,23 +333,21 @@ Dans la section \ref{sec:analyse}, il a été discuté qu'une transformation des
 %@
 
 
-<<echo = FALSE>>=
-par(mfrow=c(2,2))
-p1 <- ggplot(data, aes(x=LOSS)) + ylab("Fréquence") + geom_histogram()
-p2 <- ggplot(data, aes(x=log(LOSS))) + ylab("Fréquence")+ xlab("") + geom_histogram()
-p2
-grid.arrange(p6,p7,p8,p9,p10,p11, nrow = 3)
-hist(data$LOSS)
-hist(log(data$LOSS))
+<<echo = FALSE,message=FALSE,fig.height= 3>>=
+#par(mfrow=c(2,2))
+p1 <- ggplot(data, aes(x=LOSS)) + ylab("Fréquence") + geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+p2 <- ggplot(data, aes(x=log(LOSS))) + ylab("Fréquence") + geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
 
-m1 <- lm(LOSS ~ CLMAGE ,data=data)
-m2 <- lm(log(LOSS) ~ CLMAGE ,data=data)
+grid.arrange(p1,p2, nrow = 1)
+
+#m1 <- lm(LOSS ~ CLMAGE ,data=data)
+#m2 <- lm(log(LOSS) ~ CLMAGE ,data=data)
 
 #plot(data$CLMAGE,data$LOSS)
 #plot(data$CLMAGE,log(data$LOSS))
 
-plot(m1$fitted.values,rstudent(m1))
-plot(m2$fitted.values,rstudent(m2))
+#plot(m1$fitted.values,rstudent(m1))
+#plot(m2$fitted.values,rstudent(m2))
 # 
 # plot(data$CLMAGE,rstudent(m1))
 # plot(data$CLMAGE,rstudent(m2))
