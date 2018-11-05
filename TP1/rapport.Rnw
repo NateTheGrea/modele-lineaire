@@ -140,14 +140,15 @@ $\max(X)$     & 95 & 1067.697
 On s'intéresse donc à la capacité de la variable CLMAGE à prédire la valeur de la variable LOSS, tout en gardant en tête que cette variable endogène prend quelques valeurs extrêmes, dont la sévérité n'est pas nécessairement expliquée par les valeurs entières de la variable CLMAGE. L'analyse préléminaire univariée des variables continues projette donc la possibilité que le modèle ne puisse pas expliquer parfaitement la valeur du montant relié à une réclamation donnée.
 
 \newpage 
-Les autres variables de la base de données sont des variables qualitatives dichotomiques ou polytomiques. Une analyse de fréquences de celles-ci permet d'avoir un meilleur ressenti quant à leurs interactions avec la variable exogène \textsc{Loss}:\\
+Les autres variables exogènes de la base de données sont des variables qualitatives dichotomiques ou polytomiques. Une analyse de fréquences de celles-ci permet de voir leur représentation dans la base de données sur laquelle se basera le modèle prédictif:
+
 <<echo = FALSE>>=
 grid.arrange(p1,p2,p3,p4,p5, nrow = 3)
 @
 
+(Je sais pas quoi dire pour interpréter les diagrammes à bandes ci-haut, ça serait bon de mettre 2-3 lignes de comments) Toutefois, c'est plutôt l'analyse des nuages de points de la variable endogène en fonction de chaque variable exogène qui permet d'avoir un meilleur ressenti quant à leurs interactions avec la variable endogène \textsc{Loss}:\\
 
-
-
+\newpage
 <<echo = FALSE,fig.cap="\\label{endogene}Variable LOSS en fonction de chaque variable explicative",fig.pos = "htb">>=
 p6 <- ggplot(data=data,aes(x=ATTORNEY,y= LOSS)) + geom_point()
 p7 <- ggplot(data=data,aes(x=CLMSEX,y= LOSS)) + geom_point()
@@ -158,6 +159,10 @@ p11 <- ggplot(data=data,aes(x=CLMAGE,y= LOSS)) + geom_point()
 grid.arrange(p6,p7,p8,p9,p10,p11, nrow = 3)
 @
 
+
+(Commentaires du beau Guillaume Michel ici; on aurait peut-être aussi pu rajouter le graphique avec la transformation, soit log(Loss) en fonction de CLMAGE)
+
+\newpage
 \section{Modèle proposé}
 \label{sec:modele}
 
