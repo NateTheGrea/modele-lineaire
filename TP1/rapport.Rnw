@@ -23,11 +23,13 @@
     ## Correction des erreurs dans CLMAGE (retrait de la ligne de l'âge 610)
     data[66,7] <- 61
     
+    
     # Conversion en factor de ATTORNEY,CLIMINSUR & SEATBELT
     for(i in c("ATTORNEY","CLMINSUR","SEATBELT")){
         data[[i]] <- as.factor(data[[i]])
     }
     #sapply(data,class)
+
     
     # Création du plot des fréquences ----
     df_list <- list()
@@ -138,6 +140,7 @@ p10 <- ggplot(data=data,aes(x=SEATBELT,y= LOSS)) + geom_point()
 p11 <- ggplot(data=data,aes(x=CLMAGE,y= LOSS)) + geom_point()
 grid.arrange(p6,p7,p8,p9,p10,p11, nrow = 3)
 @
+On peut y constater que la seule variable exogène continue, \textsc{Clmage}, n'a pas initialement de relation linéaire avec la variable endogène, et donc une transformation risque d'être nécessaire.
 \newpage
 De plus, le tableau \ref{tableau:continue} indique des quantités intéressantes pour les variables continues, telles que la moyenne, écart-type, médiane, minimum et maximum.
 \begin{table}[!ht]
@@ -185,8 +188,8 @@ s'agit de l'interaction entre les variables \textit{CLMAGE et ATTORNEY} qui repr
 \subsection{Interprétation}
 \label{ssec:interpretation}
 \begin{description}
-\item [$\beta_0$] À faire
-\item [$\beta_1$] À faire
+\item [\boldmath{$\beta_0$}] Représente l'état de base, soit un individu d'âge 0, divorcé, représenté par un avocat et attaché lors de l'accident. Il est à noter que ce profil d'individu est impossible en réalité. 
+\item [$\beta_1$] Indique la variation 
 \item [$\beta_2$] À faire
 \item [$\beta_{3,i}$] À faire
 \item [$\beta_4$] À faire

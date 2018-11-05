@@ -24,6 +24,10 @@ for(i in c("ATTORNEY","CLMINSUR","SEATBELT")){
 
 #sapply(data,class)
 
+# # Correction des erreurs de statut maritaux car âge légal = 16 ans
+# problem <- which(data$MARITAL !=  "single"  & data$CLMAGE < 16)
+# data[problem,4] <- "single"
+
 
 # Création du plot des fréquences ----
 df_list <- list()
@@ -91,7 +95,7 @@ fit <- lm(log(LOSS)~CLMAGE + ATTORNEY + CLMSEX + MARITAL + CLMINSUR + SEATBELT
 
 ## Le modele avec des vifs correctent est donc le suivant:
 fit2 <- lm(log(LOSS)~CLMAGE + ATTORNEY + CLMSEX + MARITAL + CLMINSUR + SEATBELT 
-           + CLMAGE*ATTORNEY + CLMAGE*CLMSEX  + CLMAGE*SEATBELT
+           + CLMAGE*ATTORNEY + CLMAGE*CLMSEX  + CLMAGE*SEATBELT 
            + ATTORNEY*CLMSEX  + ATTORNEY*SEATBELT
             + CLMSEX*SEATBELT
            ,data=data)
@@ -121,6 +125,7 @@ pureErrorAnova(modele)
 
 
 m <- summary(modele)
+m
 coef <- m$coefficients[,1]
 
 std <- m$coefficients[,2]
