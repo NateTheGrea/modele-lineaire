@@ -23,11 +23,13 @@
     ## Correction des erreurs dans CLMAGE (retrait de la ligne de l'âge 610)
     data[66,7] <- 61
     
+    
     # Conversion en factor de ATTORNEY,CLIMINSUR & SEATBELT
     for(i in c("ATTORNEY","CLMINSUR","SEATBELT")){
         data[[i]] <- as.factor(data[[i]])
     }
     #sapply(data,class)
+
     
     # Création du plot des fréquences ----
     df_list <- list()
@@ -124,11 +126,25 @@ Voici les variables disponibles afin d'effectuer un modèle prédictif de la per
 
 \newpage
 La majorité de ces variables sont qualitatives. Une analyse de fréquences de celles-ci permet d'avoir un meilleur ressenti quant à leurs interactions avec la variable exogène \textsc{Loss}:\\
-<<echo = FALSE>>=
+
+<<echo = FALSE,fig.cap = "Barplot des fréquences des variables qualitatives",fig.pos="ht">>=
 grid.arrange(p1,p2,p3,p4,p5, nrow = 3)
 @
-
-\begin{table}[htb]
+\newpage
+Afin de mieux représenter l'interactions entre chaque varaibles exogènes et la variable endogène, la figure \ref{endogene} a été créée. Celle-ci représente la variable endogène en fonction de chacune des variable exogènes à considérer, c'est pourquoi \textsc{Casenum} n'y apparaît pas.
+<<echo = FALSE,fig.cap="\\label{endogene}Variable LOSS en fonction de chaque variable explicative",fig.pos = "!ht">>=
+p6 <- ggplot(data=data,aes(x=ATTORNEY,y= LOSS)) + geom_point()
+p7 <- ggplot(data=data,aes(x=CLMSEX,y= LOSS)) + geom_point()
+p8 <- ggplot(data=data,aes(x=MARITAL,y= LOSS)) + geom_point()
+p9 <- ggplot(data=data,aes(x=CLMINSUR,y= LOSS)) + geom_point()
+p10 <- ggplot(data=data,aes(x=SEATBELT,y= LOSS)) + geom_point()
+p11 <- ggplot(data=data,aes(x=CLMAGE,y= LOSS)) + geom_point()
+grid.arrange(p6,p7,p8,p9,p10,p11, nrow = 3)
+@
+On peut y constater que la seule variable exogène continue, \textsc{Clmage}, n'a pas initialement de relation linéaire avec la variable endogène, et donc une transformation risque d'être nécessaire.
+\newpage
+De plus, le tableau \ref{tableau:continue} indique des quantités intéressantes pour les variables continues, telles que la moyenne, écart-type, médiane, minimum et maximum.
+\begin{table}[!ht]
 \centering
 \caption{Analyse des variables continues}
 \begin{tabular}{l|c|c}
@@ -138,8 +154,10 @@ $F_X^{-1}(0.25)$     & 21 & 0.640       \\
 $F_X^{-1}(0.5)$     & 33 & 2.331        \\
 $E[X]$     & 32.6 & 5.965        \\
 $F_X^{-1}(0.75)$     & 41 &  3.998        \\
-$\max(X)$     & 95 & 1067.697 
+$\max(X)$     & 95 & 1067.697 \\
+$\sigma$ & 15.86119 & 33.1851 
 \end{tabular}
+\label{tableau:continue}
 \end{table}
 
 <<echo = FALSE,fig.cap="\\label{endogene}Variable LOSS en fonction de chaque variable explicative",fig.pos = "htb">>=
@@ -151,6 +169,7 @@ p10 <- ggplot(data=data,aes(x=SEATBELT,y= LOSS)) + geom_point()
 p11 <- ggplot(data=data,aes(x=CLMAGE,y= LOSS)) + geom_point()
 grid.arrange(p6,p7,p8,p9,p10,p11, nrow = 3)
 @
+
 
 \section{Modèle proposé}
 \label{sec:modele}
@@ -177,6 +196,15 @@ interaction non-redondante (qui ne cause pas de multicolinéarité) et significa
 s'agit de l'interaction entre les variables \textit{CLMAGE et ATTORNEY} qui représentent respectivement l'âge du réclamant ou de la réclamante et la présence d'un avocat pour la réclamation. Cette interaction est logique car, en effet, l'âge d'un réclamant peut influencer la décision de prendre un avocat. 
 \subsection{Interprétation}
 \label{ssec:interpretation}
+\begin{description}
+\item [\boldmath{$\beta_0$}] Représente l'état de base, soit un individu d'âge 0, divorcé, représenté par un avocat et attaché lors de l'accident. Il est à noter que ce profil d'individu est impossible en réalité. 
+\item [$\beta_1$] Indique la variation 
+\item [$\beta_2$] À faire
+\item [$\beta_{3,i}$] À faire
+\item [$\beta_4$] À faire
+\item [$\beta_5$] À faire
+\end{description}
+
 
 \subsection{Statistiques}
 \label{ssec:stats}
@@ -197,10 +225,10 @@ $\beta_5$     &  -0.02025211 & -0.003201663
 \end{tabular}
 \end{table}
 
-De plus, voici le $R^2_a$ : $0.2754$. Ainsi, une grande variabilité de la variable endogène n'est pas expliquée par le modèle. Ceci est en parti dû au grand nombre de variables qualitatives dans le modèle qui n'ont pas assez de valeurs possibles afin de réfléter l'étendue des valeurs possible de la perte économique. (structure de la phrase à revoir) \\
+\newpage
 
 Voici la table anova du modèle:\\
-\begin{table}[htb]
+\begin{table}[!htb]
 \centering
 \caption{Table anova du modèle}
 \begin{tabular}{l|cccc}
@@ -214,10 +242,11 @@ SST & 1335 & 2899.348   & 2.171796 &
 \\Selon la statistique F du tableau \ref{table:anova}, on peut effectuer un test de validité globale de la régression linéaire. Ce faisant, nous obtenons une p-value inférieur à $2.2*10^{-16}$ et donc nous concluons que la régression est tout à fait valide. 
 \newpage
 \section{Analyse des résidus}
-\label{sec:analyse}
+\label{sec:residus}
 \subsection{Linéarité}
 
-<<echo = FALSE, fig.cap="\\label{fig:rstudent}Résidus studentisés en fonction de CLMAGE",fig.pos='htb'>>=
+
+<<echo = FALSE, fig.cap="\\label{fig:rstudent}Résidus studentisés en fonction de CLMAGE",fig.pos='!htb'>>=
 plot(data$CLMAGE,rstudent(modele),xlab="CLMAGE", ylab="Résidus studentisés")
 @
 
@@ -275,6 +304,7 @@ CLMAGE & MARITAL & CLMSEX & SEATBELT & CLMINSUR & ATTORNEY & 2.5\% & 97.5\% \\ \
 \section{Recommandations}
 
 
+\newpage
 \begin{appendices}
 \section{Erreurs de données}
 \label{annex:error}
@@ -284,7 +314,9 @@ La base de données originelles utilisées dans la création du modèle a dû su
 \begin{enumerate}
 \item MARITAL\\
 Cette colonne contient à l'origine plusieurs fautes de frappe dans la manière de noter les états maritaux. Afin d'uniformiser le tout, il a fallu substituer les états écrits différemment dans ces quatre variables distinctes : \textit{divorced, widowed, married, single}.
+
 \newpage
+
 \item CLMSEX\\
 Cette colonne supposée contenir les états \textbf{F} ou \textbf{M} contient à l'origine quelques états \textit{male}. Afin d'unifier le tout, ces états répertoriés de façon hétérogène ont été substitués en \textbf{M}.
 \end{enumerate}
@@ -294,32 +326,57 @@ Cette colonne supposée contenir les états \textbf{F} ou \textbf{M} contient à
 % À débattre.
 Cette colonne contient une valeur très extrême de \textit{1067.697}. En analysant la figure \ref{fig:boxplot}, on voit bien que la valeur est très énorme comparativement à l'ensemble des autres valeurs prises par cette variable. Néanmoins, comme il s'agit de perte économique aux États-Unis suite à une blessure corporelle, cette valeur est possible donc nous ne l'avons pas retirée de l'étude.\\
 
-<<echo = FALSE,fig.cap="\\label{fig:boxplot}Boxplot de LOSS",fig.pos = "htb">>=
+<<echo = FALSE,fig.cap="\\label{fig:boxplot}Boxplot de LOSS",fig.pos = "!htb",fig.width=3,fig.height=1.5,fig.align="center">>=
 ggplot(data, aes(y = LOSS)) +
-    geom_boxplot() + geom_point(data=data.frame(x=0,y=max(data$LOSS)), size = 3,aes(x=x,y=y),colour="red") +theme_classic()
+    geom_boxplot() + geom_point(data=data.frame(x=0,y=max(data$LOSS)), size = 2,aes(x=x,y=y),colour="red") +theme_classic()
 
 @
-\newpage
 \item CLMAGE\\
 Cette colonne contient une valeur de \textit{610}, valeur impossible selon la description de la variable, soit l'âge du réclamant. Afin de ne pas fausser les résultats, cette valeur a été modifiée pour 61.
 \end{enumerate}
 \end{enumerate}
 
-
+\newpage
 \section{Transformation}
 \label{annex:transfo}
-<<echo = FALSE>>=
+Dans la section \ref{sec:analyse}, il a été discuté qu'une transformation des variables continues serait possible. En effet, en analysant les résidus studentisé de la variable endogène en fonction de la variable exogène continue, on constate que le postulat d'homogénéité n'est pas validé. Ainsi, afin de trouver une transformation approprié, la méthode box-cox a été appliqué sur la variable endogène. 
+%<<echo = FALSE,fig.height = 3,fig.width = 3,fig.align = "center">>=
+%bcox <- lm(LOSS ~ CLMAGE,data = data) # On a omis les variables qualitatives %our en faire un modèle simple
+%# avec les variables qualitatives incluts dans B0
+%boxcox(bcox)
+%@
 
-bcox <- lm(LOSS ~ CLMAGE,data = data) # On a omis les variables qualitatives pour en faire un modèle simple
-# avec les variables qualitatives incluts dans B0
-boxcox(bcox)
+<<echo = FALSE,fig.height = 3>>=
+
+m1 <- lm(LOSS ~ CLMAGE ,data=data)
+m2 <- lm(log(LOSS) ~ CLMAGE ,data=data)
+d1 <- data.frame("CLMAGE" = data$CLMAGE,"Residus" = rstudent(m1))
+d2 <- data.frame("CLMAGE" = data$CLMAGE,"Residus" = rstudent(m2))
+p1 <- ggplot(data=d1,aes(x=CLMAGE,y= Residus)) + geom_point() + ggtitle("Avant transformation") + theme(plot.title = element_text(hjust = 0.5))
+p2 <- ggplot(data=d2,aes(x=CLMAGE,y= Residus)) + geom_point() + ggtitle("Après transformation") + theme(plot.title = element_text(hjust = 0.5))
+grid.arrange(p1,p2, nrow = 1)
 @
 
 
-<<echo = FALSE>>=
-par(mfrow=c(1,2))
-hist(data$LOSS)
-hist(log(data$LOSS))
+<<echo = FALSE,message=FALSE,fig.cap = "Comparaison des distributions post-transformation",fig.height= 3,fig.pos = "!ht">>=
+#par(mfrow=c(2,2))
+p1 <- ggplot(data, aes(x=LOSS)) + ylab("Fréquence") + geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+p2 <- ggplot(data, aes(x=log(LOSS))) + ylab("Fréquence") + geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+
+grid.arrange(p1,p2, nrow = 1)
+
+#m1 <- lm(LOSS ~ CLMAGE ,data=data)
+#m2 <- lm(log(LOSS) ~ CLMAGE ,data=data)
+
+#plot(data$CLMAGE,data$LOSS)
+#plot(data$CLMAGE,log(data$LOSS))
+
+#plot(m1$fitted.values,rstudent(m1))
+#plot(m2$fitted.values,rstudent(m2))
+# 
+# plot(data$CLMAGE,rstudent(m1))
+# plot(data$CLMAGE,rstudent(m2))
+
 @
 
 
